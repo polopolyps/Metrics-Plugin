@@ -1,6 +1,3 @@
-<!--
-  This view is used to render the installed plugins page.
--->
 <div>
   This plugin can generate load on a page and then retrieve Metrics data for renderings.
 </div>

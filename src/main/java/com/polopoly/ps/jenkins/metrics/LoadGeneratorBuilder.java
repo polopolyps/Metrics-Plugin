@@ -35,7 +35,7 @@ import org.kohsuke.stapler.QueryParameter;
  * Sample {@link Builder}.
  *
  * <p>
- * Starts grinder to generate load on the site.
+ * Generates load on the site using org.apache.http.benchmark.HttpBenchmark.
  * </p>
  * 
  */

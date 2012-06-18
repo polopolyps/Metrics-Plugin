@@ -1,29 +1,13 @@
 package com.polopoly.ps.jenkins.metrics;
 
-import hudson.Extension;
-import hudson.model.Describable;
 import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Descriptor;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
-import hudson.util.FormValidation;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
-import javax.servlet.ServletException;
-
-import jenkins.model.Jenkins;
-
-import org.kohsuke.stapler.QueryParameter;
-
 /**
- * Action used for Grinder report on build level.
+ * Action used for Metrics report on build level.
  * 
  */
 public class MetricsBuildAction extends AbstractMetricsAction {

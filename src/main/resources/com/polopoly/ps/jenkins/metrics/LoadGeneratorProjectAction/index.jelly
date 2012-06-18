@@ -1,9 +1,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-	
-	
-
-	<l:layout xmlns:g="/hudson/plugins/grinder/tags">
+	<l:layout>
 		<st:include it="${it.project}" page="sidepanel.jelly" />
 
 		<l:main-panel>

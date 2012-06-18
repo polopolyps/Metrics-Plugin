@@ -1,24 +1,11 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:entry title="Metrics servlet host" help="${rootURL}/plugin/grinder/help-projectConfig.html">
-    <!--
-      Creates an text field that shows the value of the "name" property.
-      When submitted, it will be passed to the corresponding constructor parameter.
-    -->
-    <f:textbox field="metricsServletURI" />
-	</f:entry>
-	<f:entry title="Polopoly Webservice URI" help="http://domain/polopoly/ws">
-    <!--
-      Creates an text field that shows the value of the "name" property.
-      When submitted, it will be passed to the corresponding constructor parameter.
-    -->
-    <f:textbox field="wsURI" />
-    </f:entry>
-    <f:entry title="Polopoly Webservice credentials" help="username:password">
-    <!--
-      Creates an text field that shows the value of the "name" property.
-      When submitted, it will be passed to the corresponding constructor parameter.
-    -->
-    <f:textbox field="authStr" />
-    </f:entry>
-
+  <f:entry title="Metrics servlet host" field="metricsServletURI">
+    <f:textbox />
+  </f:entry>
+  <f:entry title="Polopoly Webservice URI" field="wsURI">
+    <f:textbox />
+  </f:entry>
+  <f:entry title="Polopoly Webservice credentials" field="authStr">
+    <f:textbox />
+  </f:entry>
 </j:jelly>

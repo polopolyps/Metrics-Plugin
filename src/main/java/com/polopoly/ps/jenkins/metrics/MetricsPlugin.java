@@ -3,7 +3,7 @@ package com.polopoly.ps.jenkins.metrics;
 import hudson.Plugin;
 
 /**
- * Entry point for the grinder plugin.
+ * Entry point for the Metrics plugin.
  *
  */
 
