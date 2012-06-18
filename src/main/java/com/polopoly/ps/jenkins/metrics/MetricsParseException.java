@@ -1,4 +1,4 @@
-package com.atex;
+package com.polopoly.ps.jenkins.metrics;
 
 /**
  * Exception used to show Metrics parsing has failed.

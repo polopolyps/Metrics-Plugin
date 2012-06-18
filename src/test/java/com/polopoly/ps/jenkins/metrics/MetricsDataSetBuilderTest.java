@@ -1,4 +1,4 @@
-package com.atex;
+package com.polopoly.ps.jenkins.metrics;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +15,8 @@ public class MetricsDataSetBuilderTest {
 
 	@Before
 	public void setup() throws Exception{
-		MetricsReader reader1 = new MetricsReader(new FileInputStream(new File("src/test/resources/com/atex/test1.html")), 1, "http://localhost:8080", "credentials");
-		MetricsReader reader2 = new MetricsReader(new FileInputStream(new File("src/test/resources/com/atex/test2.html")), 2, "http://localhost:8080", "credentials");
+		MetricsReader reader1 = new MetricsReader(new FileInputStream(new File("src/test/resources/com/polopoly/ps/jenkins/metrics/test1.html")), 1, "http://localhost:8080", "credentials");
+		MetricsReader reader2 = new MetricsReader(new FileInputStream(new File("src/test/resources/com/polopoly/ps/jenkins/metrics/test2.html")), 2, "http://localhost:8080", "credentials");
 
 		builder.add(reader1.getMetricsList().iterator());
 		builder.add(reader2.getMetricsList().iterator());

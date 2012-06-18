@@ -1,4 +1,4 @@
-package com.atex;
+package com.polopoly.ps.jenkins.metrics;
 
 /**
  * Represents a Metric table row for a specific build

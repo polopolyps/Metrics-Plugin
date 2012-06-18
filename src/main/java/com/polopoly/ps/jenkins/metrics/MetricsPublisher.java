@@ -1,4 +1,4 @@
-package com.atex;
+package com.polopoly.ps.jenkins.metrics;
 
 import hudson.Extension;
 import hudson.Launcher;
@@ -27,7 +27,7 @@ import javax.servlet.ServletException;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import com.atex.LoadGeneratorBuilder.DescriptorImpl;
+import com.polopoly.ps.jenkins.metrics.LoadGeneratorBuilder.DescriptorImpl;
 
 /**
  * The publisher creates the results we want from the Metrics execution.
@@ -36,7 +36,7 @@ import com.atex.LoadGeneratorBuilder.DescriptorImpl;
 public class MetricsPublisher extends Recorder {
 
 	private final static Logger LOG = Logger
-			.getLogger(com.atex.MetricsPublisher.class.getName());
+			.getLogger(com.polopoly.ps.jenkins.metrics.MetricsPublisher.class.getName());
 	private String metricsServletURI;
 	private final String wsURI;
 	private final String authStr;

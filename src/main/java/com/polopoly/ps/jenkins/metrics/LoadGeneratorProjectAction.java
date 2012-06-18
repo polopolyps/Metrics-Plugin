@@ -1,4 +1,4 @@
-package com.atex;
+package com.polopoly.ps.jenkins.metrics;
 
 import hudson.model.Action;
 import hudson.model.Result;

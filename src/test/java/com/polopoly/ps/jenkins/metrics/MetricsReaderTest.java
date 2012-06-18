@@ -1,4 +1,4 @@
-package com.atex;
+package com.polopoly.ps.jenkins.metrics;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ public class MetricsReaderTest {
 
 		MetricsReader reader;
 		try {
-			reader = new MetricsReader(new FileInputStream(new File("src/test/resources/com/atex/test1.html")), 1, "http://localhost:8080", "credentials");
+			reader = new MetricsReader(new FileInputStream(new File("src/test/resources/com/polopoly/ps/jenkins/metrics/test1.html")), 1, "http://localhost:8080", "credentials");
 			
 			System.out.println(reader);
 			Assert.assertTrue(reader.getMetricsList().size() == 19);
