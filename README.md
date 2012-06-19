@@ -25,8 +25,8 @@ Now you should have the plugin available for you at target/metrics.hpi. To insta
 If you want to improve and/or expand the plugin, simply fork the repository, do your magic, push your changes of send us a pull request.
 To run and debug it locally you'd use the following commands:
 
-   mvn hpi:run -Djetty.port=8090
-   or 
-   mvnDebug hpi:run -Djetty.port=8090
+    mvn hpi:run -Djetty.port=8090
+    or 
+    mvnDebug hpi:run -Djetty.port=8090
 
 The jetty.port paramater is optional but often wanted.
