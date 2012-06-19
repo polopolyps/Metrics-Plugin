@@ -2,6 +2,7 @@
 
 The Metrics plugin for Jenkins adds capability for a Jenkins job to generate load on your site, presenting benchmarking figures as well as Metrics data.
 The goal is to have a lightweight load test as part of you countinous integration setup.
+The target installation is assumed to have Metrics data collection enabled.
 
 ## Reports
 
