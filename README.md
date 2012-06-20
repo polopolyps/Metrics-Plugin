@@ -2,6 +2,7 @@
 
 The Metrics plugin for Jenkins adds capability for a Jenkins job to generate load on your site, presenting benchmarking figures as well as Metrics data.
 The goal is to have a lightweight load test as part of you countinous integration setup.
+The target installation is assumed to have Metrics data collection enabled.
 
 ## Reports
 
@@ -25,8 +26,8 @@ Now you should have the plugin available for you at target/metrics.hpi. To insta
 If you want to improve and/or expand the plugin, simply fork the repository, do your magic, push your changes of send us a pull request.
 To run and debug it locally you'd use the following commands:
 
-   mvn hpi:run -Djetty.port=8090
-   or 
-   mvnDebug hpi:run -Djetty.port=8090
+    mvn hpi:run -Djetty.port=8090
+    or 
+    mvnDebug hpi:run -Djetty.port=8090
 
 The jetty.port paramater is optional but often wanted.
