@@ -3,7 +3,6 @@ package com.polopoly.ps.jenkins.metrics;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MetricsDataSet {
 
 	private String key;

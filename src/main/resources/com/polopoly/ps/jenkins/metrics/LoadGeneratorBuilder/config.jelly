@@ -1,14 +1,12 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:entry title="URL" field="url">
-    <f:textbox />
+  
+  <f:entry title="Parameters" field="loadGeneratorParams">
+    <f:repeatableProperty field="loadGeneratorParams" minimum="1" add="Add page load"/> 
   </f:entry>
-  <f:entry title="Number of concurrent threads" field="threads">
-    <f:textbox />
-  </f:entry>
-  <f:entry title="Number of requests per thread" field="requests">
-    <f:textbox />
-  </f:entry>
+   
   <f:entry title="Clear Metrics data before generating load?" field="clearMetrics">
     <f:checkbox />
   </f:entry>
 </j:jelly>
+
+  
