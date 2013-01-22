@@ -19,7 +19,7 @@ public class AbstractMetricsAction implements Action {
 
    public String getDisplayName() {
       return MetricsPlugin.DISPLAY_NAME;
-   }
+   } 
 
    public String getUrlName() {
       return MetricsPlugin.URL;
