@@ -8,7 +8,7 @@ public class MetricsData {
 
 	private String key;
 	private int build;
-	private int totalTime;
+	private int totalTime; 
 
 	public String getKey() {
 		return key;

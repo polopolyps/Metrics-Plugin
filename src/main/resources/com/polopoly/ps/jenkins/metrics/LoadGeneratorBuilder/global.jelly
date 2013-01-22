@@ -11,6 +11,7 @@
     tags they use. Views are always organized according to its owner class,
     so it should be straightforward to find them.
   -->
-  <f:section title="Load generator">
+  <f:section title="Page load generator">
+  
   </f:section>
 </j:jelly>

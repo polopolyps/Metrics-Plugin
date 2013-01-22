@@ -1,18 +1,45 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">	
 	<l:layout>
 		<st:include it="${it.project}" page="sidepanel.jelly" />
 
 		<l:main-panel>
-	      <h1>Load Test Project Report</h1>
+		  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+          <script type="text/javascript">
+            $(document).ready(function(){
+                $("#thechoices").change(function(){
+                    if(this.value == 'all')
+                        {$("#urls").children().show();}
+                    else
+                        {$("#" + this.value).show().siblings().hide();}
+                    });
+                $("#thechoices").change();
+            });
+        </script>
 
-		${it.init()}
-	      <div style="width: 1200px; margin-left: auto; margin-right: auto;">
-	         <img src="loadTestTimePerRequestGraph" height="600" width="1200"/>
-         </div> 
-         <div style="width: 1200px; margin-left: auto; margin-right: auto;">
-             <img src="loadTestRequestsPerSecondGraph" height="600" width="1200"/>
-         </div>        
+	     <h1>Page Load Test Project Report</h1>
+		 ${it.init()}
+		 <select id="thechoices">
+            <j:forEach var="url" varStatus="loopStatus" items="${it.urls}">
+                <option value="url${loopStatus.index}">${url}</option>
+            </j:forEach>
+            <option value="all">All URLs</option> 
+         </select>
+
+         <div id="urls">
+         <j:forEach var="url" varStatus="loopStatus" items="${it.urls}">
+           <div id="url${loopStatus.index}">
+            URL: ${url}
+            <div style="width: 1200px; margin-left: auto; margin-right: auto;">
+                <img src="loadTestTimePerRequestGraph?url=${url}" height="600" width="1200"/>
+            </div> 
+            <div style="width: 1200px; margin-left: auto; margin-right: auto;">
+                <img src="loadTestRequestsPerSecondGraph?url=${url}" height="600" width="1200"/>
+            </div> 
+           </div>
+         </j:forEach>  
+         </div>
+
       </l:main-panel>
 	</l:layout>
 </j:jelly>

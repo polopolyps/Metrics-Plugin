@@ -25,6 +25,7 @@ public class GraphUtil {
 
 		chart.setBackgroundPaint(Color.WHITE);
 
+		
 		CategoryPlot plot = chart.getCategoryPlot();
 		plot.setBackgroundPaint(Color.WHITE);
 		plot.setOutlinePaint(null);

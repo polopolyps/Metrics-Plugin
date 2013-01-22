@@ -10,7 +10,13 @@ import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -21,12 +27,16 @@ import org.kohsuke.stapler.StaplerResponse;
 public class LoadGeneratorProjectAction implements Action {
 
 	private final Project<?, ?> project;
-
-	private DataSetBuilder<String, NumberOnlyBuildLabel> tprBuilder;
-	private DataSetBuilder<String, NumberOnlyBuildLabel> rpsBuilder;
-
+	
+	private List<String> uniqueUrls;
+	private Map<String, DataSetBuilder<String, NumberOnlyBuildLabel>> timePerRequestBuildersPerUrlMap;
+	private Map<String, DataSetBuilder<String, NumberOnlyBuildLabel>> requestsPerSecondBuildersPerUrlMap;
+	
 	public LoadGeneratorProjectAction(Project<?, ?> project) {
 		this.project = project;
+		this.uniqueUrls = new ArrayList<String>();
+		this.timePerRequestBuildersPerUrlMap = new HashMap<String, DataSetBuilder<String, NumberOnlyBuildLabel>>();
+		this.requestsPerSecondBuildersPerUrlMap = new HashMap<String, DataSetBuilder<String, NumberOnlyBuildLabel>>();
 	}
 
 	public Project<?, ?> getProject() {
@@ -34,9 +44,10 @@ public class LoadGeneratorProjectAction implements Action {
 	}
 
 	public void init() {
-		tprBuilder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
-		rpsBuilder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
 
+		DataSetBuilder<String, NumberOnlyBuildLabel> timePerRequestBuilder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+		DataSetBuilder<String, NumberOnlyBuildLabel> requestsPerSecondBuilder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+		
 		for (Object build : project.getBuilds()) {
 
 			AbstractBuild abstractBuild = (AbstractBuild) build;
@@ -44,39 +55,70 @@ public class LoadGeneratorProjectAction implements Action {
 			if (!abstractBuild.isBuilding()
 					&& abstractBuild.getResult().isBetterOrEqualTo(
 							Result.SUCCESS)) {
-				LoadGeneratorBuildAction action = abstractBuild
-						.getAction(LoadGeneratorBuildAction.class);
-				if(action != null) {
-					double timePerRequest = action.getTimePerRequest();
-					if(timePerRequest != -1) {
-						tprBuilder.add(timePerRequest, "Your site", new NumberOnlyBuildLabel(abstractBuild));
-					}
-					double requestPerSecond = action.getRequestPerSecond();
-					if(requestPerSecond != -1) {
-						rpsBuilder.add(requestPerSecond, "Your site", new NumberOnlyBuildLabel(abstractBuild));
+				List<Action> buildActions = abstractBuild.getActions();
+				for(Iterator<Action> buildActionIterator = buildActions.iterator(); buildActionIterator.hasNext();) {
+					Action buildAction = buildActionIterator.next();
+					if(buildAction instanceof LoadGeneratorBuildAction) {
+						LoadGeneratorBuildAction loadBuildAction = (LoadGeneratorBuildAction)buildAction;
+						String url = loadBuildAction.getUrl();
+						String description = loadBuildAction.getDescription();
+						timePerRequestBuilder = getTimePerRequestBuilder(url);
+						requestsPerSecondBuilder = getRequestsPerSecondBuilder(url);
+						
+						double timePerRequest = loadBuildAction.getTimePerRequest();
+						if(timePerRequest != -1) {
+							timePerRequestBuilder.add(timePerRequest, description, new NumberOnlyBuildLabel(abstractBuild));
+						}
+						double requestPerSecond = loadBuildAction.getRequestPerSecond();
+						if(requestPerSecond != -1) {
+							requestsPerSecondBuilder.add(requestPerSecond, description, new NumberOnlyBuildLabel(abstractBuild));						
+						}
+						if(!uniqueUrls.contains(url)) {
+							uniqueUrls.add(url);
+						}
 					}
 				}
 			}
 		}
 	}
+	
+	private DataSetBuilder<String, NumberOnlyBuildLabel> getRequestsPerSecondBuilder(String url)
+	{
+		DataSetBuilder<String, NumberOnlyBuildLabel> requestsPerSecondBuilder = requestsPerSecondBuildersPerUrlMap.get(url) ;
+		if(requestsPerSecondBuildersPerUrlMap.get(url) == null) {
+			requestsPerSecondBuilder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+			requestsPerSecondBuildersPerUrlMap.put(url, requestsPerSecondBuilder);
+		} 
+		return requestsPerSecondBuilder;
+	}
+	
+	private DataSetBuilder<String, NumberOnlyBuildLabel> getTimePerRequestBuilder(String url)
+	{
+		DataSetBuilder<String, NumberOnlyBuildLabel> timePerRequestBuilder = timePerRequestBuildersPerUrlMap.get(url);
+		if(timePerRequestBuildersPerUrlMap.get(url) == null) {
+			timePerRequestBuilder = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+			timePerRequestBuildersPerUrlMap.put(url, timePerRequestBuilder);
+		} 
+		return timePerRequestBuilder;
+	}
 
 	public void doLoadTestTimePerRequestGraph(StaplerRequest request,
-			StaplerResponse response) throws IOException {
+			StaplerResponse response, @QueryParameter String url) throws IOException {
 
 		if (shouldReloadGraph(request, response)) {
 			// Draw the common graph:
 			ChartUtil.generateGraph(request, response,
-					GraphUtil.createGraph(tprBuilder, "Avarage rendering time (ms)"), 1200, 600);
+					GraphUtil.createGraph(timePerRequestBuildersPerUrlMap.get(url), "Avarage rendering time (ms)"), 1200, 600);
 		}
 	}
 	
 	public void doLoadTestRequestsPerSecondGraph(StaplerRequest request,
-			StaplerResponse response) throws IOException {
+			StaplerResponse response, @QueryParameter String url) throws IOException {
 
 		if (shouldReloadGraph(request, response)) {
 			// Draw the common graph:
 			ChartUtil.generateGraph(request, response,
-					GraphUtil.createGraph(rpsBuilder, "Avarage requests per second"), 1200, 600);
+					GraphUtil.createGraph(requestsPerSecondBuildersPerUrlMap.get(url), "Avarage requests per second"), 1200, 600);
 
 		}
 	}
@@ -92,7 +134,7 @@ public class LoadGeneratorProjectAction implements Action {
 	}
 
 	public String getDisplayName() {
-		return "Load test report";
+		return "Page load test report";
 	}
 
 	public String getUrlName() {
@@ -102,4 +144,8 @@ public class LoadGeneratorProjectAction implements Action {
 	protected boolean shouldReloadGraph(StaplerRequest request, StaplerResponse response, Run build) throws IOException {
 	    return !request.checkIfModified(build.getTimestamp(), response);
 	}
+	
+	public List<String> getUrls() {
+		return uniqueUrls;
+    }
 }
