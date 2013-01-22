@@ -1,0 +1,21 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+ 
+ <p>
+ <f:entry title="URL" field="url"> 
+    <f:textbox />
+ </f:entry> 
+ 
+ <f:entry title="Description" field="description"> 
+    <f:textbox />
+ </f:entry> 
+ 
+ <f:entry title="Threads" field="threads"> 
+    <f:textbox />
+ </f:entry> 
+
+ <f:entry title="Requests" field="requests"> 
+    <f:textbox />
+ </f:entry> 
+ </p>
+ 
+</j:jelly>
