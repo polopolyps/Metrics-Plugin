@@ -8,7 +8,7 @@
 
   <groupId>com.polopoly.ps.jenkins</groupId>
   <artifactId>metrics</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
@@ -25,6 +25,23 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+<distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>polopoly-ps</id>
+      <name>Professional Services</name>
+      <url>http://maven.polopoly.com/nexus/content/repositories/professional-services</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>polopoly-ps-snapshots</id>
+      <name>Professional Services Snapshots</name>
+      <url>http://maven.polopoly.com/nexus/content/repositories/professional-services-snapshots</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>  
   
   <dependencies>
 	<dependency>
