@@ -7,6 +7,19 @@
   <f:entry title="Clear Metrics data before generating load?" field="clearMetrics">
     <f:checkbox />
   </f:entry>
+  
+  <f:entry title="Metrics auth URI" field="authURI">
+    <f:textbox default="http://localhost:8080/polopolydevelopment-auth/login/"/>
+  </f:entry>
+  <f:entry title="Metrics servlet host" field="metricsServletURI">
+    <f:textbox default="http://localhost:8080/polopolydevelopment/Metrics/"/>
+  </f:entry>
+  <f:entry title="Polopoly Webservice URI" field="wsURI">
+    <f:textbox default="http://localhost:8080/polopoly/ws"/>
+  </f:entry>
+  <f:entry title="Polopoly Webservice credentials" field="authStr">
+    <f:textbox default="sysadmin:sysadmin"/>
+  </f:entry>
 </j:jelly>
 
   

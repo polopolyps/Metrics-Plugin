@@ -21,10 +21,10 @@ public class MetricsReader {
 	private ArrayList<MetricsData> list =new ArrayList<MetricsData>();
 	private static Logger logger = Logger.getLogger(MetricsReader.class.getSimpleName()); 
 
-	public MetricsReader(InputStream is, int build, String wsURI, String authStr) throws MetricsParseException {
+	public MetricsReader(Document doc, int build, String wsURI, String authStr) throws MetricsParseException {
 		
-		try {
-			Document doc = Jsoup.parse(is, "UTF-8", "http://localhost:8080");
+//		try {
+// 			Document doc = Jsoup.parse(is, "UTF-8", "http://localhost:8080");
 			Elements tableRows = doc.getElementsByTag("tr");
 			for(int i = 1; i < tableRows.size(); i++){
 				Element tableRow = tableRows.get(i);
@@ -44,9 +44,9 @@ public class MetricsReader {
 				metric.setTotalTime(Integer.parseInt(totalTime));
 				list.add(metric);
 			}
-		} catch (IOException e) {
-			throw new MetricsParseException("Failed to parse metrics data", e);
-		}
+//		} catch (IOException e) {
+//			throw new MetricsParseException("Failed to parse metrics data", e);
+//		}
 	}
 
 	private String getExternalContentId(String key, String wsURI, String authStr) throws MalformedURLException, IOException {		

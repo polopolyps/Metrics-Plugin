@@ -14,9 +14,8 @@ import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -43,12 +42,18 @@ public class LoadGeneratorBuilder extends Builder {
 
 	private Boolean clearMetrics;
     private LoadGeneratorParam[] loadGeneratorParams = new LoadGeneratorParam[0];
+    
+	private LoadGeneratorResult data = new LoadGeneratorResult();
 
-    // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
+	// Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public LoadGeneratorBuilder(LoadGeneratorParam[] loadGeneratorParams, Boolean clearMetrics) { 
+    public LoadGeneratorBuilder(LoadGeneratorParam[] loadGeneratorParams, Boolean clearMetrics, String authURI, String metricsServletURI, String wsURI, String authStr) { 
     	this.loadGeneratorParams = loadGeneratorParams;
         this.clearMetrics = clearMetrics;
+        this.data.metricsServletURI = metricsServletURI;
+        this.data.wsURI = wsURI;
+        this.data.setAuthStr(authStr);
+        this.data.setAuthURI(authURI);
     }
 
     /**
@@ -63,8 +68,27 @@ public class LoadGeneratorBuilder extends Builder {
     	return loadGeneratorParams;
     }
 
+    /*
+     * Stuff from the result class 
+     */
+    public String getLoginURI() {
+		return data.authURI;
+	}
+
+	public String getWsURI() {
+		return data.wsURI;
+	}
+
+	public String getAuthStr() {
+		return data.authStr;
+	}
+
+	public String getMetricsServletURI() {
+		return data.metricsServletURI;
+	}
+	
     @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
+    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         // This is where you 'build' the project.
     	List<Cause> buildStepCause = new ArrayList<Cause>();
         buildStepCause.add(new Cause() {
@@ -75,40 +99,41 @@ public class LoadGeneratorBuilder extends Builder {
         listener.started(buildStepCause);
         
         if(clearMetrics) {
-        	MetricsPublisher metricsPublisher = (MetricsPublisher)build.getProject().getPublishersList().get(MetricsPublisher.class);
-        	String metricsURI = metricsPublisher.getMetricsServletURI();
-
-        	clearMetricsData(listener, metricsURI);
+        	clearMetricsData(listener, data.metricsServletURI);
         }
         
         for(LoadGeneratorParam loadGeneratorParam : loadGeneratorParams) {
         	try {
         		LoadGenerator loadGenerator = new LoadGenerator(loadGeneratorParam.url.toString(), loadGeneratorParam.threads, loadGeneratorParam.requests);;
         		String abResult = loadGenerator.generateLoad();
-        		build.addAction(new LoadGeneratorBuildAction(abResult, loadGeneratorParam.url.toString(), loadGeneratorParam.description));
+        		build.addAction(new LoadGeneratorBuildAction(build, abResult, loadGeneratorParam.url.toString(), loadGeneratorParam.description));
         		listener.finished(Result.SUCCESS);
         	} catch (Exception e) {
         		listener.error("Failed to generate load, " + e.getMessage());
         		listener.finished(Result.FAILURE);
         	}
         }
-        return true;
+        
+        return data.perform(build, launcher, listener);
     }
     
 	@Override
-	public Action getProjectAction(AbstractProject<?, ?> project) {
+	public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
+		Collection<Action> actions = new ArrayList<Action>();
 		if(project instanceof Project) {
 			Action action = project.getAction(LoadGeneratorProjectAction.class);
 			if(action == null) {
-				return new LoadGeneratorProjectAction((Project) project);
+				actions.add(new LoadGeneratorProjectAction((Project) project));
 			}
 			else {
-				return action;
+				actions.add(action);
 			}
+			actions.add(new MetricsProjectAction((Project) project));
+			return actions;
 		}
 		return null;
 	}
-
+	
     private void clearMetricsData(BuildListener listener, String metricsURI) {
         HttpClient httpclient = new DefaultHttpClient();
         PrintStream logger = listener.getLogger();
@@ -174,6 +199,27 @@ public class LoadGeneratorBuilder extends Builder {
         public String getDisplayName() {
             return "Load generator";
         }
+        
+        public FormValidation doCheckloginURI(@QueryParameter String value)
+				throws IOException, ServletException {
+			return ValidationUtil.checkUrl(value);
+		}
+		
+		public FormValidation doCheckMetricsServletURI(
+				@QueryParameter String value) throws IOException,
+				ServletException {
+			return ValidationUtil.checkUrl(value);
+		}
+
+		public FormValidation doCheckWsURI(@QueryParameter String value)
+				throws IOException, ServletException {
+			return ValidationUtil.checkUrl(value);
+		}
+
+		public FormValidation doCheckAuthStr(@QueryParameter String value)
+				throws IOException, ServletException {
+			return ValidationUtil.checkAuthString(value);
+		}
     }
 }
 

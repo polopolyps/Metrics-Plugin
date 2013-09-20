@@ -1,5 +1,8 @@
 package com.polopoly.ps.jenkins.metrics;
 
+import hudson.model.Build;
+import hudson.model.AbstractBuild;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -16,7 +19,11 @@ public class LoadGeneratorBuildAction extends AbstractMetricsAction {
 	private Pattern tprPattern = Pattern.compile(("Time per request:\\s\\s(\\d*[\\.,]\\d*)"));
 	private Pattern rpsPattern = Pattern.compile(("Requests per second:\\s\\s(\\d*[\\.,]\\d*)"));
 	
-	public LoadGeneratorBuildAction(String abResult, String url, String description) {
+	private final AbstractBuild build;
+	
+	
+	public LoadGeneratorBuildAction(AbstractBuild build, String abResult, String url, String description) {
+		this.build = build;
 		this.abResult = abResult;
 		this.url = url;
 		this.description = description;
@@ -59,5 +66,19 @@ public class LoadGeneratorBuildAction extends AbstractMetricsAction {
 	
 	public String getDescription() {
 		return this.description;
+	}
+
+	public AbstractBuild getBuild() {
+		return build;
+	}
+	
+	@Override
+	public String getUrlName() {
+		return null;
+	}
+	
+	@Override
+	public String getIconFileName() {
+		return null;
 	}
 }
